@@ -19,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
+//컨트롤러 관련 빈만 띄운다 그래서 rest data 관련 autoConfiguration 사용 못함
+//내부적으로 MockMvc를 사용할 수 있게 빈을 띄워준다
+//@WebMvcTest
 public class DataRestTest {
 
 	private final MockMvc mvc;
