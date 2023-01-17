@@ -28,12 +28,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
-  #H2 ??? ????
-  h2:
-    console:
-      enabled: true
-  #?
+        
   sql:
     init:
       mode: always
