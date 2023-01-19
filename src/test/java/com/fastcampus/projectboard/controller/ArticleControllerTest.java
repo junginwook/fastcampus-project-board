@@ -30,7 +30,7 @@ class ArticleControllerTest {
 	@Test
 	public void givenNothing_whenRequestingArticlesView_thenReturnsArticlesView() throws Exception {
 		//Given
-
+		//
 		//when & then
 		mvc.perform(get("/articles"))
 				.andExpect(status().isOk())
