@@ -18,7 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 @ToString
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class AuditingFields {
+public abstract class AuditingFields {
 
 	@DateTimeFormat(iso = ISO.DATE_TIME)
 	@CreatedDate
@@ -27,7 +27,7 @@ public class AuditingFields {
 
 	@CreatedBy
 	@Column(nullable = false, updatable = false, length = 100)
-	private String createdBy; //생성자
+	protected String createdBy; //생성자
 
 	@LastModifiedDate
 	@Column(nullable = false)
@@ -35,5 +35,5 @@ public class AuditingFields {
 
 	@LastModifiedBy
 	@Column(nullable = false, length = 100)
-	private String modifiedBy; // 수정자
+	protected String modifiedBy; // 수정자
 }
