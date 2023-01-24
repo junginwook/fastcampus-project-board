@@ -6,6 +6,7 @@ import com.fastcampus.projectboard.domain.QArticle;
 import com.fastcampus.projectboard.domain.QArticleComment;
 import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.StringExpression;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
@@ -18,6 +19,7 @@ public interface ArticleCommentRepository extends
 		QuerydslPredicateExecutor<ArticleComment>,
 		QuerydslBinderCustomizer<QArticleComment> {
 
+	List<ArticleComment> findByArticle_Id(Long articleId);
 	@Override
 	default void customize(QuerydslBindings bindings, QArticleComment root) {
 		//모든 필드들에 대한 검색이 열러 있는데
@@ -27,4 +29,6 @@ public interface ArticleCommentRepository extends
 		bindings.bind(root.createdAt).first(DateTimeExpression::eq);
 		bindings.bind(root.createdBy).first(StringExpression::containsIgnoreCase);
 	}
+
+	void deleteByIdAndUserAccount_UserId(Long articleCommentId, String userId);
 }
