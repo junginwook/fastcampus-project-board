@@ -24,7 +24,7 @@ import lombok.ToString;
 		@Index(columnList = "createdBy")
 })
 @Entity
-public class Hashtag {
+public class Hashtag extends AuditingFields {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
