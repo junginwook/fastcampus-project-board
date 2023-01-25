@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public record ArticleDto (
-		Long articleId,
+		Long id,
 		UserAccountDto userAccountDto,
 		String title,
 		String content,
