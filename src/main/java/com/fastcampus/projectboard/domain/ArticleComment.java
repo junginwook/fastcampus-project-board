@@ -27,19 +27,26 @@ public class ArticleComment extends AuditingFields {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@ManyToOne(optional = false)
+	@Setter @Column(nullable = false) private UserAccount userAccount;
 	@Setter @ManyToOne(optional = false) private Article article; //게시글 Id
 	@Setter @Column(nullable = false, length = 500) private String content; //내용
+
+	@Setter
+	@Column(updatable = false)
+	private Long parentCommentId;
 
 	protected ArticleComment() {
 	}
 
-	private ArticleComment(Article article, String content) {
+	private ArticleComment(UserAccount userAccount, Article article, String content) {
+		this.userAccount = userAccount;
 		this.article = article;
 		this.content = content;
 	}
 
-	public static ArticleComment of(Article article, String content) {
-		return new ArticleComment(article, content);
+	public static ArticleComment of(Article article, UserAccount userAccount, String content) {
+		return new ArticleComment(userAccount, article, content);
 	}
 
 	@Override

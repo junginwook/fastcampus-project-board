@@ -1,8 +1,8 @@
 package com.fastcampus.projectboard.repository;
 
 import com.fastcampus.projectboard.domain.Article;
+import com.fastcampus.projectboard.domain.Hashtag;
 import com.fastcampus.projectboard.domain.QArticle;
-import com.fastcampus.projectboard.dto.ArticleDto;
 import com.fastcampus.projectboard.repository.querydsl.ArticleRepositoryCustom;
 import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.StringExpression;
@@ -15,12 +15,12 @@ import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
-public interface ArticleRepository extends
-		JpaRepository<Article, Long>,
+public interface HashtagRepository extends
+		JpaRepository<Hashtag, Long>,
 		ArticleRepositoryCustom,
 		//entityd에 대한 기본 검색기능을 추가해준다
 		//부분 검색은 지원하고 있지 ㅇ낳음
-		QuerydslPredicateExecutor<Article>,
+		QuerydslPredicateExecutor<Hashtag>,
 		//입맛에 맞는 검색 기능을 추가하기 위해서
 		QuerydslBinderCustomizer<QArticle> {
 
