@@ -116,6 +116,19 @@ public class ArticleService {
 		return articleRepository.findByHashtagNames(List.of(hashtagName), pageable)
 				.map(ArticleDto::from);
 	}
+	public ArticleWithCommentsDto getArticleWithComments(Long articleId) {
+		return articleRepository.findById(articleId)
+				.map(ArticleWithCommentsDto::from)
+				.orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다 - articleId: " + articleId));
+	}
+
+	@Transactional(readOnly = true)
+	public ArticleDto getArticle(Long articleId) {
+		return articleRepository.findById(articleId)
+				.map(ArticleDto::from)
+				.orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다. - articleId" + articleId));
+	}
+
 
 	private Set<Hashtag> renewHashtagsFromContent(String content) {
 		return Collections.emptySet();
