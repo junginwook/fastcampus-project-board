@@ -14,8 +14,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 
-@Disabled
 @DisplayName("JPA 연결 테스트")
+@Disabled
 @Import(JpaConfig.class)
 @DataJpaTest
 class JpaRepositoryTest {

@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ArticleRepositoryCustom {
 
-	@Deprecated
-	List<String> findAllDistinctHashtags();
-	Page<Article> findByHashtagNames(Collection<String> hashtagNames, Pageable pageable);
+//	@Deprecated
+//	List<String> findAllDistinctHashtags();
+//	Page<Article> findByHashtagNames(Collection<String> hashtagNames, Pageable pageable);
 }
