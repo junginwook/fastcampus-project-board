@@ -42,10 +42,7 @@ public class ArticleService {
 			case CONTENT -> articleRepository.findByContentContaining(searchKeyword, pageable).map(ArticleDto::from);
 			case ID -> articleRepository.findByUserAccount_UserIdContaining(searchKeyword, pageable).map(ArticleDto::from);
 			case NICKNAME -> articleRepository.findByUserAccount_NicknameContaining(searchKeyword, pageable).map(ArticleDto::from);
-			case HASHTAG -> articleRepository.findByHashtagNames(
-					Arrays.stream(searchKeyword.split(" ")).toList(),
-					pageable
-			).map(ArticleDto::from);
+			case HASHTAG -> null;
 		};
 	}
 
@@ -113,8 +110,9 @@ public class ArticleService {
 			return Page.empty(pageable);
 		}
 
-		return articleRepository.findByHashtagNames(List.of(hashtagName), pageable)
-				.map(ArticleDto::from);
+//		return articleRepository.findByHashtagNames(List.of(hashtagName), pageable)
+//				.map(ArticleDto::from);
+		return null;
 	}
 	public ArticleWithCommentsDto getArticleWithComments(Long articleId) {
 		return articleRepository.findById(articleId)

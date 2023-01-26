@@ -25,7 +25,6 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @Table(indexes = {
 		@Index(columnList = "title"),
-		@Index(columnList = "hashtag"),
 		@Index(columnList = "createdAt"),
 		@Index(columnList = "createdBy"),
 })
@@ -37,7 +36,7 @@ public class Article extends AuditingFields {
 	private Long id;
 
 	@ManyToOne(optional = false)
-	@Setter @Column(nullable = false) private UserAccount userAccount;
+	@Setter @JoinColumn(name = "user_id") private UserAccount userAccount;
 	@Setter @Column(nullable = false) private String title; //제목
 	@Setter @Column(nullable = false, length = 10000) private String content; //내용
 	@ToString.Exclude

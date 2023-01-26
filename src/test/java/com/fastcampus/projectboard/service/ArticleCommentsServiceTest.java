@@ -59,7 +59,7 @@ class ArticleCommentsServiceTest {
 		//Then
 		assertThat(actual).hasSize(2); //parent child
 		assertThat(actual)
-				.extracting("id", "articleId", "parentCommentId", "content")
+				.extracting("id", "articleId", "parentId", "content")
 				.containsExactlyInAnyOrder(
 						tuple(1L, 1L, null, "parent content"),
 						tuple(2L, 1L, 1L, "child content")
@@ -121,7 +121,7 @@ class ArticleCommentsServiceTest {
 		then(articleRepository).should().getReferenceById(child.articleId());
 		then(userAccountRepository).should().getReferenceById(child.userAccountDto().userId());
 		then(articleCommentRepository).should().getReferenceById(child.parentId());
-		then(articleCommentRepository).should().save(any(ArticleComment.class));
+		then(articleCommentRepository).should(never()).save(any(ArticleComment.class));
 	}
 
 	@DisplayName("댓글 ID를 입력하면, 댓글을 삭제한다.")

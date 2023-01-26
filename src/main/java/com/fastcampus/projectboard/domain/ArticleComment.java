@@ -1,14 +1,20 @@
 package com.fastcampus.projectboard.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,13 +34,19 @@ public class ArticleComment extends AuditingFields {
 	private Long id;
 
 	@ManyToOne(optional = false)
-	@Setter @Column(nullable = false) private UserAccount userAccount;
-	@Setter @ManyToOne(optional = false) private Article article; //게시글 Id
-	@Setter @Column(nullable = false, length = 500) private String content; //내용
-
+	@Setter @JoinColumn(name = "article_id") private Article article; //게시글 Id
+	@ManyToOne(optional = false)
+	@Setter @JoinColumn(name = "user_id") private UserAccount userAccount;
 	@Setter
 	@Column(updatable = false)
 	private Long parentCommentId;
+
+	@ToString.Exclude
+	@OrderBy("createdAt ASC")
+	@OneToMany(mappedBy = "parentCommentId", cascade = CascadeType.ALL)
+	private Set<ArticleComment> childComments = new LinkedHashSet<>();
+	@Setter @Column(nullable = false, length = 500) private String content; //내용
+
 
 	protected ArticleComment() {
 	}
@@ -47,6 +59,11 @@ public class ArticleComment extends AuditingFields {
 
 	public static ArticleComment of(Article article, UserAccount userAccount, String content) {
 		return new ArticleComment(userAccount, article, content);
+	}
+
+	public void addChildComment(ArticleComment child) {
+		child.setParentCommentId(this.getId());
+		this.childComments.add(child);
 	}
 
 	@Override
