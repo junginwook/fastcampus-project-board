@@ -1,6 +1,7 @@
 package com.fastcampus.projectboard.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -15,7 +16,9 @@ import com.fastcampus.projectboard.dto.ArticleDto;
 import com.fastcampus.projectboard.dto.HashtagDto;
 import com.fastcampus.projectboard.dto.UserAccountDto;
 import com.fastcampus.projectboard.service.ArticleService;
+import com.fastcampus.projectboard.service.PaginationService;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -38,6 +41,7 @@ class ArticleControllerTest {
 	private final MockMvc mvc;
 
 	@MockBean private ArticleService articleService;
+	@MockBean private PaginationService paginationService;
 
 	public ArticleControllerTest(@Autowired MockMvc mvc) {
 		this.mvc = mvc;
@@ -48,6 +52,7 @@ class ArticleControllerTest {
 	public void givenNothing_whenRequestingArticlesView_thenReturnsArticlesView() throws Exception {
 		//Given
 		given(articleService.searchArticles(eq(null), eq(null), any(Pageable.class))).willReturn(Page.empty());
+		given(paginationService.getPaginationNarNumbers(anyInt(), anyInt())).willReturn(List.of(0, 1, 2, 3, 4, 5));
 
 		//when & then
 		mvc.perform(get("/articles"))
@@ -55,9 +60,11 @@ class ArticleControllerTest {
 				.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
 				.andExpect(view().name("articles/index"))
 				//modelAttribute 확인
-				.andExpect(model().attributeExists("articles"));
+				.andExpect(model().attributeExists("articles"))
+				.andExpect(model().attributeExists("paginationBarNumbers"));
 
 		then(articleService).should().searchArticles(eq(null), eq(null), any(Pageable.class));
+		then(paginationService).should().getPaginationNarNumbers(anyInt(), anyInt());
 	}
 
 	@DisplayName("[view][GET] 게시글 상세 페이지 - 정상 호출")
