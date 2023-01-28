@@ -29,9 +29,9 @@ spring:
       hibernate:
         format_sql: true
         
-  sql:
-    init:
-      mode: always
+#  sql:
+#    init:
+#      mode: always
   data:
     rest:
       base-path: /api
@@ -39,3 +39,9 @@ spring:
   thymeleaf3:
     decoupled-logic: true
 
+
+---
+
+spring:
+  config.activate.on-profile: test
+  datasource.url: jdbc:h2:mem:testdb

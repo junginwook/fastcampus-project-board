@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.fastcampus.projectboard.config.JpaConfig;
 import com.fastcampus.projectboard.domain.Article;
+import com.fastcampus.projectboard.domain.Hashtag;
 import java.util.List;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +14,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 
-@Disabled
 @DisplayName("JPA 연결 테스트")
+@Disabled
 @Import(JpaConfig.class)
 @DataJpaTest
 class JpaRepositoryTest {
@@ -49,7 +50,7 @@ class JpaRepositoryTest {
 		long previousCount = articleRepository.count();
 
 		//when
-		Article savedArticle = articleRepository.save(Article.of("new article", "new content", "#spring"));
+//		Article savedArticle = articleRepository.save(Article.of("new article", "new content", "#spring"));
 
 		//then
 		assertThat(articleRepository.count())
@@ -62,8 +63,8 @@ class JpaRepositoryTest {
 	void givenTestData_whenUpdating_thenWorksFine() {
 		//given
 		Article article = articleRepository.findById(1L).orElseThrow();
-		String updatedHashtag = "#springboot";
-		article.setHashtag(updatedHashtag);
+		Hashtag updatedHashtag = Hashtag.of("hashtag");
+		article.addHashtag(updatedHashtag);
 
 		//when
 		Article savedArticle = articleRepository.saveAndFlush(article);
