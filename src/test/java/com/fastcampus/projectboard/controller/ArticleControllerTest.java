@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fastcampus.projectboard.config.SecurityConfig;
+import com.fastcampus.projectboard.domain.type.SearchType;
 import com.fastcampus.projectboard.dto.ArticleDto;
 import com.fastcampus.projectboard.dto.HashtagDto;
 import com.fastcampus.projectboard.dto.UserAccountDto;
@@ -66,7 +67,33 @@ class ArticleControllerTest {
 		then(articleService).should().searchArticles(eq(null), eq(null), any(Pageable.class));
 		then(paginationService).should().getPaginationNarNumbers(anyInt(), anyInt());
 	}
-	//test
+
+	@DisplayName("[view][GET] 게시글 리스트 (게시판) 페이지 - 검색어와 함께 호출")
+	@Test
+	public void givenKeyword_whenSearchingArticlesView_thenReturnsArticlesView() throws Exception {
+		//Given
+		SearchType searchType = SearchType.TITLE;
+		String searchValue = "title";
+		given(articleService.searchArticles(eq(searchType), eq(searchValue), any(Pageable.class))).willReturn(Page.empty());
+		given(paginationService.getPaginationNarNumbers(anyInt(), anyInt())).willReturn(List.of(0, 1, 2, 3, 4, 5));
+
+		//when & then
+		mvc.perform(
+				get("/articles")
+						.queryParam("searchType", searchType.name())
+						.queryParam("searchValue", searchValue)
+				)
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+				.andExpect(view().name("articles/index"))
+				//modelAttribute 확인
+				.andExpect(model().attributeExists("articles"))
+				.andExpect(model().attributeExists("searchTypes"));
+
+		then(articleService).should().searchArticles(eq(searchType), eq(searchValue), any(Pageable.class));
+		then(paginationService).should().getPaginationNarNumbers(anyInt(), anyInt());
+	}
+
 	@DisplayName("[view][GET] 게시글 상세 페이지 - 정상 호출")
 	@Test
 	public void givenNothing_whenRequestingArticleView_thenReturnsArticlesView() throws Exception {
