@@ -18,8 +18,10 @@ import com.fastcampus.projectboard.dto.UserAccountDto;
 import com.fastcampus.projectboard.repository.ArticleRepository;
 import com.fastcampus.projectboard.repository.HashtagRepository;
 import com.fastcampus.projectboard.repository.UserAccountRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +31,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -79,13 +82,31 @@ class ArticleServiceTest {
 	@DisplayName("없는 해시태그를 검색하면, 빈 페이지를 반환한다.")
 	@Test
 	void givenNonexistentHashtag_whenSearchingArticlesViaHashtag_thenReturnsEmptyPage() {
+		//Given
+		String hashtagName = "없음";
+		Pageable pageable = Pageable.ofSize(20);
 
+		//Then
+
+		//Then
 	}
 
-	@DisplayName("게시글 정보를 입력하면, 게시글을 생성한다")
+	@DisplayName("댓글 달린 게시글이 없으면, 예외를 던진다.")
 	@Test
 	void givenArticleInfo_whenSavingArticle_thenSavesArticle() {
+		//Given
+		Long articleId = 0L;
+		given(articleRepository.findById(articleId)).willReturn(Optional.empty());
 
+		//When
+		Throwable t =
+				catchThrowable(() -> sut.getArticleWithComments(articleId));
+
+		//Then
+		assertThat(t)
+				.isInstanceOf(EntityNotFoundException.class)
+				.hasMessage("게시글이 없습니다 - articleId: " + articleId);
+		then(articleRepository).should().findById(articleId);
 	}
 
 	@DisplayName("게시글의 ID와 수정 정보를 입력하면, 게시글을 수정한다")
