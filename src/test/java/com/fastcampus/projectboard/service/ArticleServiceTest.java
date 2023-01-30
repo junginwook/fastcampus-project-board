@@ -88,7 +88,7 @@ class ArticleServiceTest {
 
 		//Then
 
-		//Then
+		//Then//
 	}
 
 	@DisplayName("댓글 달린 게시글이 없으면, 예외를 던진다.")
