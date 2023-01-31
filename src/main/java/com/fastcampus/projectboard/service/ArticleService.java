@@ -110,9 +110,7 @@ public class ArticleService {
 			return Page.empty(pageable);
 		}
 
-//		return articleRepository.findByHashtagNames(List.of(hashtagName), pageable)
-//				.map(ArticleDto::from);
-		return null;
+		return articleRepository.findByHashtag(hashtagName, pageable).map(ArticleDto::from);
 	}
 	public ArticleWithCommentsDto getArticleWithComments(Long articleId) {
 		return articleRepository.findById(articleId)
@@ -130,5 +128,9 @@ public class ArticleService {
 
 	private Set<Hashtag> renewHashtagsFromContent(String content) {
 		return Collections.emptySet();
+	}
+
+	public List<String> getHashtags() {
+		return articleRepository.findAllDistinctHashtags();
 	}
 }
