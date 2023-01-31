@@ -39,6 +39,9 @@ public class Article extends AuditingFields {
 	@Setter @JoinColumn(name = "user_id") private UserAccount userAccount;
 	@Setter @Column(nullable = false) private String title; //제목
 	@Setter @Column(nullable = false, length = 10000) private String content; //내용
+
+	@Setter @Column(nullable = false, length = 10000) private String hashtag; //내용
+
 	@ToString.Exclude
 	@JoinTable(
 			name = "article_hashtag",

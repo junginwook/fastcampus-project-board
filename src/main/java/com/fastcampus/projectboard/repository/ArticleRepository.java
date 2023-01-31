@@ -40,7 +40,7 @@ public interface ArticleRepository extends
 	Page<Article> findByContentContaining(String content, Pageable pageable);
 	Page<Article> findByUserAccount_UserIdContaining(String userId, Pageable pageable);
 	Page<Article> findByUserAccount_NicknameContaining(String nickname, Pageable pageable);
-//	Page<Article> findByHashtags(String searchKeyword, Pageable pageable);
+	Page<Article> findByHashtag(String searchKeyword, Pageable pageable);
 
 	void deleteByIdAndUserAccount_UserId(Long articleId, String userId);
 }
