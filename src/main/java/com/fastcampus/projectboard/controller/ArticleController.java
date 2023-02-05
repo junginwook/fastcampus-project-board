@@ -4,6 +4,7 @@ import com.fastcampus.projectboard.domain.type.SearchType;
 import com.fastcampus.projectboard.dto.response.ArticleCommentResponse;
 import com.fastcampus.projectboard.dto.response.ArticleResponse;
 import com.fastcampus.projectboard.dto.response.ArticleWithCommentsResponse;
+import com.fastcampus.projectboard.dto.security.BoardPrincipal;
 import com.fastcampus.projectboard.service.ArticleService;
 import com.fastcampus.projectboard.service.PaginationService;
 import java.util.List;
@@ -12,10 +13,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -68,6 +71,25 @@ public class ArticleController {
 		map.addAttribute("paginationBarNumbers", barNumbers);
 //		map.addAttribute("searchTypes", SearchType.values());
 
-		return "articles/search-hasgtag";
+		return "articles/search-hashtag";
+	}
+
+	@PostMapping("/{articleId}/form")
+	public String updateArticle(
+			@PathVariable Long articleId,
+			@AuthenticationPrincipal BoardPrincipal boardPrincipal
+	) {
+
+		return "redirect:/articles/" + articleId;
+	}
+
+	@PostMapping("/{articleId}/delete")
+	public String deleteArticle(
+			@PathVariable Long articleId,
+			@AuthenticationPrincipal BoardPrincipal boardPrincipal
+	) {
+		articleService.deleteArticle(articleId, boardPrincipal.username());
+
+		return "redirect:/articles";
 	}
 }

@@ -8,10 +8,12 @@ import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fastcampus.projectboard.config.SecurityConfig;
+import com.fastcampus.projectboard.config.TestSecurityConfig;
 import com.fastcampus.projectboard.domain.type.SearchType;
 import com.fastcampus.projectboard.dto.ArticleDto;
 import com.fastcampus.projectboard.dto.HashtagDto;
@@ -31,11 +33,14 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 @DisplayName("View 컨트롤러 - 게시글")
 @Disabled
-@Import(SecurityConfig.class)
+@Import(TestSecurityConfig.class)
 @WebMvcTest(ArticleController.class)
 class ArticleControllerTest {
 
@@ -46,6 +51,20 @@ class ArticleControllerTest {
 
 	public ArticleControllerTest(@Autowired MockMvc mvc) {
 		this.mvc = mvc;
+	}
+
+	@DisplayName("[view][GET] 게시글 페이지 - 인증 없을 땐 로그인 페이지로 이동")
+	@Test
+	void givenNothing_whenRequestingArticlePage_thenRedirectsToLoginPage() throws Exception {
+		//Given
+		long articleId = 1L;
+
+		//When & Then
+		mvc.perform(get("/articles/" + articleId))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrlPattern("**/login"));
+		then(articleService).shouldHaveNoInteractions();
+		then(articleService).shouldHaveNoInteractions();
 	}
 
 	@DisplayName("[view][GET] 게시글 리스트 (게시판) 페이지 - 정상 호출")
@@ -124,6 +143,16 @@ class ArticleControllerTest {
 				.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
 				.andExpect(view().name("articles/search"));
 	}
+
+	@WithUserDetails(value = "inwookTest", setupBefore = TestExecutionEvent.TEST_EXECUTION) //실제 userDetails 이용
+	@DisplayName("[view][POST] 새 게시글 등록 - 정상호출")
+	@Test
+	void givenNewArticleInfo_whenRequesting_thenSavesNewArticle() {
+		//Given
+
+		//When & Then
+	}
+
 
 	private ArticleDto createArticleDto() {
 		return ArticleDto.of(
