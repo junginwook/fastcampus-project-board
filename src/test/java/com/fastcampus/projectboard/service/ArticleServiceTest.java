@@ -37,7 +37,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @DisplayName("비즈니스 로직 - 게시글")
-@Disabled
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTest {
 
