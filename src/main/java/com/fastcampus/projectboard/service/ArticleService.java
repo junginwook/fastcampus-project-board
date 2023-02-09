@@ -30,6 +30,8 @@ public class ArticleService {
 	private final ArticleRepository articleRepository;
 	private final UserAccountRepository userAccountRepository;
 
+	private final HashtagService hashtagService;
+
 	@Transactional(readOnly = true)
 	public Page<ArticleDto> searchArticles(SearchType searchType, String searchKeyword, Pageable pageable) {
 
@@ -62,7 +64,7 @@ public class ArticleService {
 		articleRepository.save(article);
 	}
 
-	public void updateArticle(long articleId, ArticleDto dto) {
+	public void updateArticle(Long articleId, ArticleDto dto) {
 		try {
 			Article article = articleRepository.getReferenceById(articleId);
 			UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
@@ -78,11 +80,10 @@ public class ArticleService {
 				Set<Long> hashtagIds = article.getHashtags().stream()
 						.map(Hashtag::getId)
 						.collect(Collectors.toSet());
-
 				article.clearHashtags();
 				articleRepository.flush();
 
-				//			hashtagIds.forEach();
+				hashtagIds.forEach(hashtagService::deleteHashtagWithoutArticles);
 
 				Set<Hashtag> hashtags = renewHashtagsFromContent(dto.content());
 				article.addHashtags(hashtags);

@@ -38,6 +38,7 @@ public class ArticleCommentsService {
 			Article article = articleRepository.getReferenceById(dto.articleId());
 			UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
 			ArticleComment articleComment = dto.toEntity(article, userAccount);
+
 			if (dto.parentId() != null) {
 				ArticleComment parentComment = articleCommentRepository.getReferenceById(dto.parentId());
 				parentComment.addChildComment(articleComment);
