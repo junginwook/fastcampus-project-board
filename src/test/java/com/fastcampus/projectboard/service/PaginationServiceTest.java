@@ -33,7 +33,7 @@ class PaginationServiceTest {
 		//Given
 
 		//When
-		List<Integer> actual = sut.getPaginationNarNumbers(currentPageNumber, totalPages);
+		List<Integer> actual = sut.getPaginationBarNumbers(currentPageNumber, totalPages);
 
 		//Then
 		assertThat(actual).isEqualTo(expected);

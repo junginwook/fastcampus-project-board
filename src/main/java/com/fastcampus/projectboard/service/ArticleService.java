@@ -3,13 +3,12 @@ package com.fastcampus.projectboard.service;
 import com.fastcampus.projectboard.domain.Article;
 import com.fastcampus.projectboard.domain.Hashtag;
 import com.fastcampus.projectboard.domain.UserAccount;
-import com.fastcampus.projectboard.domain.type.SearchType;
+import com.fastcampus.projectboard.domain.constant.SearchType;
 import com.fastcampus.projectboard.dto.ArticleDto;
 import com.fastcampus.projectboard.dto.ArticleWithCommentsDto;
 import com.fastcampus.projectboard.repository.ArticleRepository;
 import com.fastcampus.projectboard.repository.UserAccountRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -102,6 +101,10 @@ public class ArticleService {
 		articleRepository.flush();
 
 //		hashtagIds.forEach();
+	}
+
+	public long getArticleCount() {
+		return articleRepository.count();
 	}
 
 	@Transactional(readOnly = true)
