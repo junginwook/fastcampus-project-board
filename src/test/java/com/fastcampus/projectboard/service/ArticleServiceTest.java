@@ -1,18 +1,15 @@
 package com.fastcampus.projectboard.service;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willDoNothing;
 
 import com.fastcampus.projectboard.domain.Article;
 import com.fastcampus.projectboard.domain.Hashtag;
 import com.fastcampus.projectboard.domain.UserAccount;
-import com.fastcampus.projectboard.domain.type.SearchType;
+import com.fastcampus.projectboard.domain.constant.SearchType;
 import com.fastcampus.projectboard.dto.ArticleDto;
-import com.fastcampus.projectboard.dto.ArticleUpdateDto;
 import com.fastcampus.projectboard.dto.HashtagDto;
 import com.fastcampus.projectboard.dto.UserAccountDto;
 import com.fastcampus.projectboard.repository.ArticleRepository;
@@ -20,10 +17,8 @@ import com.fastcampus.projectboard.repository.HashtagRepository;
 import com.fastcampus.projectboard.repository.UserAccountRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +27,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
