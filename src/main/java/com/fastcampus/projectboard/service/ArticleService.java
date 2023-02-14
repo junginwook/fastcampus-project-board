@@ -113,7 +113,7 @@ public class ArticleService {
 			return Page.empty(pageable);
 		}
 
-		return articleRepository.findByHashtag(hashtagName, pageable).map(ArticleDto::from);
+		return articleRepository.findByHashtagNames(List.of(hashtagName), pageable).map(ArticleDto::from);
 	}
 	public ArticleWithCommentsDto getArticleWithComments(Long articleId) {
 		return articleRepository.findById(articleId)

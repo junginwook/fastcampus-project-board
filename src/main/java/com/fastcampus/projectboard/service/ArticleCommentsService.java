@@ -29,7 +29,9 @@ public class ArticleCommentsService {
 	@Transactional(readOnly = true)
 	public List<ArticleCommentDto> searchArticleComments(long articleId) {
 		return articleCommentRepository.findByArticle_Id(articleId)
-				.stream().map(ArticleCommentDto::from).collect(Collectors.toList());
+				.stream()
+				.map(ArticleCommentDto::from)
+				.collect(Collectors.toList());
 	}
 	
 	@Transactional

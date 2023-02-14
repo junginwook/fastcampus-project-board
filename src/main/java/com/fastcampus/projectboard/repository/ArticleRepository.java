@@ -31,7 +31,7 @@ public interface ArticleRepository extends
 //		bindings.including(root.title, root.content, root.hashtag, root.createdAt, root.createdBy);
 		bindings.bind(root.title).first(StringExpression::containsIgnoreCase); // '%{v}%'
 		bindings.bind(root.content).first(StringExpression::containsIgnoreCase); // like
-//		bindings.bind(root.hashtag).first(StringExpression::containsIgnoreCase); // like
+		bindings.bind(root.hashtag).first(StringExpression::containsIgnoreCase); // like
 		bindings.bind(root.createdAt).first(DateTimeExpression::eq);
 		bindings.bind(root.createdBy).first(StringExpression::containsIgnoreCase);
 	}
