@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willDoNothing;
 
 import com.fastcampus.projectboard.domain.Article;
 import com.fastcampus.projectboard.domain.Hashtag;
@@ -22,6 +23,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.assertj.core.api.InstanceOfAssertFactories;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -197,21 +200,52 @@ class ArticleServiceTest {
 		then(articleRepository).should().save(any(Article.class));
 	}
 
-	@DisplayName("게시글의 수정 정보를 입력하면, 게시글을 삭제한다")
+	@DisplayName("게시글의 수정 정보를 입력하면, 게시글을 수정한다.")
+	@Disabled
 	@Test
 	void givenArticleIdAndModifiedInfo_whenDeletingArticle_thenDeletesArticle() {
+		//Given
+		Article article = createArticle();
+		ArticleDto dto = createArticleDto("새 타이틀", "새 내용 #springboot");
+		Set<String> expectedHashtagNames = Set.of("springboot");
+		Set<Hashtag> expectedHashtags = new HashSet<>();
 
+		given(articleRepository.getReferenceById(dto.id())).willReturn(article);
+		given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(dto.userAccountDto().toEntity());
+		willDoNothing().given(articleRepository).flush();
+		willDoNothing().given(hashtagService).deleteHashtagWithoutArticles(any());
+		given(hashtagService.parseHashtagNames(dto.content())).willReturn(expectedHashtagNames);
+		given(hashtagService.findHashtagByNames(expectedHashtagNames)).willReturn(expectedHashtags);
+
+		//When
+		sut.updateArticle(dto.id(), dto);
+
+		//Then
+		assertThat(article)
+				.hasFieldOrPropertyWithValue("title", dto.title())
+				.hasFieldOrPropertyWithValue("content", dto.content())
+				.extracting("hashtags", as(InstanceOfAssertFactories.COLLECTION))
+				.hasSize(1)
+				.extracting("hashtagName")
+				.containsExactly("springboot");
+
+		then(articleRepository).should().getReferenceById(dto.id());
+		then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
+		then(articleRepository).should().flush();
+		then(hashtagService).should().deleteHashtagWithoutArticles(any());
+		then(hashtagService).should().parseHashtagNames(dto.content());
+		then(hashtagService).should().findHashtagByNames(expectedHashtagNames);
 	}
 
 	private UserAccount createUserAccount() {
-		return createUserAccount("inwook");
+		return createUserAccount("uno");
 	}
 
 	private UserAccount createUserAccount(String userId) {
 		return UserAccount.of(
 				userId,
 				"password",
-				"inwook@email.com",
+				"uno@email.com",
 				"Uno",
 				null
 		);
@@ -273,9 +307,9 @@ class ArticleServiceTest {
 		return UserAccountDto.of(
 				"uno",
 				"password",
-				"uno@email.com",
+				"uno@mail.com",
 				"Uno",
-				"memo",
+				"This is memo",
 				LocalDateTime.now(),
 				"uno",
 				LocalDateTime.now(),

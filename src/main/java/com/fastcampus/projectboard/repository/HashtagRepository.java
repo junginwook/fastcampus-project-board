@@ -15,5 +15,5 @@ import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
-public interface HashtagRepository {
+public interface HashtagRepository extends JpaRepository<Hashtag, Long> {
 }
