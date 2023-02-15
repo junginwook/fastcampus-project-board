@@ -7,6 +7,7 @@ import com.fastcampus.projectboard.domain.constant.SearchType;
 import com.fastcampus.projectboard.dto.ArticleDto;
 import com.fastcampus.projectboard.dto.ArticleWithCommentsDto;
 import com.fastcampus.projectboard.repository.ArticleRepository;
+import com.fastcampus.projectboard.repository.HashtagRepository;
 import com.fastcampus.projectboard.repository.UserAccountRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Collections;
@@ -28,6 +29,9 @@ public class ArticleService {
 
 	private final ArticleRepository articleRepository;
 	private final UserAccountRepository userAccountRepository;
+	private final HashtagService hashtagService;
+
+	private final HashtagRepository hashtagRepository;
 
 	@Transactional(readOnly = true)
 	public Page<ArticleDto> searchArticles(SearchType searchType, String searchKeyword, Pageable pageable) {
@@ -58,6 +62,7 @@ public class ArticleService {
 
 		Article article = dto.toEntity(userAccount);
 		article.addHashtags(hashtags);
+
 		articleRepository.save(article);
 	}
 
@@ -77,11 +82,10 @@ public class ArticleService {
 				Set<Long> hashtagIds = article.getHashtags().stream()
 						.map(Hashtag::getId)
 						.collect(Collectors.toSet());
-
 				article.clearHashtags();
 				articleRepository.flush();
 
-				//			hashtagIds.forEach();
+				hashtagIds.forEach(hashtagService::deleteHashtagWithoutArticles);
 
 				Set<Hashtag> hashtags = renewHashtagsFromContent(dto.content());
 				article.addHashtags(hashtags);
@@ -100,7 +104,7 @@ public class ArticleService {
 		articleRepository.deleteByIdAndUserAccount_UserId(articleId, userId);
 		articleRepository.flush();
 
-//		hashtagIds.forEach();
+		hashtagIds.forEach(hashtagService::deleteHashtagWithoutArticles);
 	}
 
 	public long getArticleCount() {
@@ -130,10 +134,22 @@ public class ArticleService {
 
 
 	private Set<Hashtag> renewHashtagsFromContent(String content) {
-		return Collections.emptySet();
+		Set<String> hashtagNamesInContent = hashtagService.parseHashtagNames(content);
+		Set<Hashtag> hashtags = hashtagService.findHashtagByNames(hashtagNamesInContent);
+		Set<String> existingHashtagNames = hashtags.stream()
+				.map(Hashtag::getHashtagName)
+				.collect(Collectors.toUnmodifiableSet());
+
+		hashtagNamesInContent.forEach(newHashtagName -> {
+			if (!existingHashtagNames.contains(newHashtagName)) {
+				hashtags.add(Hashtag.of(newHashtagName));
+			}
+		});
+
+		return hashtags;
 	}
 
 	public List<String> getHashtags() {
-		return articleRepository.findAllDistinctHashtags();
+		return hashtagRepository.findAllHashtagNames();
 	}
 }
