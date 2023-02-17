@@ -22,6 +22,7 @@ public record ArticleCommentRequest(
 		return ArticleCommentDto.of(
 			articleId,
 			userAccountDto,
+			parentCommentId,
 			content
 		);
 	}
