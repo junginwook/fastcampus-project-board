@@ -51,14 +51,15 @@ public class ArticleComment extends AuditingFields {
 	protected ArticleComment() {
 	}
 
-	private ArticleComment(UserAccount userAccount, Article article, String content) {
+	private ArticleComment(UserAccount userAccount, Article article, Long parentCommentId, String content) {
 		this.userAccount = userAccount;
 		this.article = article;
+		this.parentCommentId = parentCommentId;
 		this.content = content;
 	}
 
 	public static ArticleComment of(Article article, UserAccount userAccount, String content) {
-		return new ArticleComment(userAccount, article, content);
+		return new ArticleComment(userAccount, article, null, content);
 	}
 
 	public void addChildComment(ArticleComment child) {
