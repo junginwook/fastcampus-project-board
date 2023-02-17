@@ -4,8 +4,11 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.fastcampus.projectboard.config.JpaConfig;
 import com.fastcampus.projectboard.domain.Article;
+import com.fastcampus.projectboard.domain.ArticleComment;
 import com.fastcampus.projectboard.domain.Hashtag;
 import java.util.List;
+import java.util.Optional;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -89,5 +92,20 @@ class JpaRepositoryTest {
 		//then
 		assertThat(articleRepository.count()).isEqualTo(previousArticleCount - 1);
 		assertThat(articleCommentRepository.count()).isEqualTo(previousArticleCommentCount - deletedCommentSize);
+	}
+
+	@DisplayName("대댓글 조회 테스트")
+	@Test
+	void givenParentCommentId_whenSelecting_thenReturnsChildComments() {
+		//Given
+
+		//When
+		Optional<ArticleComment> parentComment = articleCommentRepository.findById(1L);
+
+		//Then
+		assertThat(parentComment).get()
+				.hasFieldOrPropertyWithValue("parentCommentId", null)
+				.extracting("childComments", InstanceOfAssertFactories.COLLECTION)
+				.hasSize(4);
 	}
 }
