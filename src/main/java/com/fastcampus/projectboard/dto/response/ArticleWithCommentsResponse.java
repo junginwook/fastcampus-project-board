@@ -33,17 +33,18 @@ public record ArticleWithCommentsResponse(
 		}
 
 		return new ArticleWithCommentsResponse(
-			dto.id(),
-			dto.title(),
-			dto.content(),
-			dto.hashtagDtos().stream()
-					.map(HashtagDto::hashtagName)
-					.collect(Collectors.toUnmodifiableSet()),
-			dto.createdAt(),
-			dto.userAccountDto().email(),
-			nickname,
-			dto.userAccountDto().userId(),
-			organizeChildComments(dto.articleCommentDtos())
+				dto.id(),
+				dto.title(),
+				dto.content(),
+				dto.hashtagDtos().stream()
+						.map(HashtagDto::hashtagName)
+						.collect(Collectors.toUnmodifiableSet())
+				,
+				dto.createdAt(),
+				dto.userAccountDto().email(),
+				nickname,
+				dto.userAccountDto().userId(),
+				organizeChildComments(dto.articleCommentDtos())
 		);
 	}
 

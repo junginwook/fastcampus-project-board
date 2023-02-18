@@ -3,12 +3,16 @@ package com.fastcampus.projectboard.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.*;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
+import com.fastcampus.projectboard.domain.Hashtag;
 import com.fastcampus.projectboard.repository.HashtagRepository;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -49,5 +53,21 @@ class HashtagServiceTest {
 				arguments("#java_spring", Set.of("java_spring")),
 				arguments("#java#spring", Set.of("java", "spring"))
 		);
+	}
+
+	@DisplayName("해시태그 이름들을 입력하면, 저장된 해시태그 중 이름에 매칭하는 것들을 중복 없이 반환한다.")
+	@Test
+	void givenHashtagNames_whenFindingHashtags_thenReturnsHashtagSet() {
+		//Given
+		Set<String> hashtagNames = Set.of("java", "spring", "boot");
+		given(hashtagRepository.findByHashtagNameIn(hashtagNames)).willReturn(
+				List.of(Hashtag.of("java"), Hashtag.of("spring")));
+
+		//When
+		Set<Hashtag> hashtags = sut.findHashtagByNames(hashtagNames);
+
+		//Then
+		assertThat(hashtags).hasSize(2);
+		then(hashtagRepository).should().findByHashtagNameIn(hashtagNames);
 	}
 }
